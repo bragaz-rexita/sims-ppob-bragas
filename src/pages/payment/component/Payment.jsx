@@ -59,7 +59,7 @@ const Payment = () => {
                 NotifAlert({
                     icon: 'success',
                     title: 'Success',
-                    message: `${response.message}`,
+                    message: `Transaksi ${payload.service_code} sebesar ${formatToDisplayRupiah(data.service_tariff)} berhasil.`,
                 });
                 triggerRefresh();
                 navigate('/home');
