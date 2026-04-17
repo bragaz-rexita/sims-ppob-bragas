@@ -104,8 +104,8 @@ const SignIn = () => {
                         onFinish={handleOnSubmit}
                         layout="vertical"
                         initialValues={{
-                            email: 'user@nutech-integrasi.com',
-                            password: 'abcdef1234'
+                            email: 'b.rexita@mail.com',
+                            password: '12345678'
                         }}
                     >
                         <Form.Item
