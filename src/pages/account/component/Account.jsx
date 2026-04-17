@@ -5,7 +5,7 @@ import { getDataAccount, updateDataAccount } from '../../../api/api-account';
 import { NotifAlert, NotifQuestion } from '../../../components/Global/ToastNotif';
 import ProfilePhoto from './ProfilePhoto';
 
-const { Text } = Typography;
+const { Text, Link } = Typography;
 
 const Account = () => {
     const navigate = useNavigate();
@@ -113,6 +113,10 @@ const Account = () => {
         localStorage.removeItem('session');
         localStorage.removeItem('token');
         navigate('/signin');
+    };
+
+    const handleBack = ()=>{
+        navigate('/home');
     };
 
     return (
@@ -226,6 +230,10 @@ const Account = () => {
                     </ConfigProvider>
                 </div>
             )}
+            <div style={{height: '30px'}}></div>
+            <Link strong onClick={handleBack} style={{ color: '#ff2222' }}>
+                Kembali ke Beranda
+            </Link>
         </>
     );
 };

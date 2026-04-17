@@ -5,22 +5,27 @@ import { Height } from '../../../components/Global/Height';
 import { createTransaction } from '../../../api/api-transaction';
 import { NotifAlert, NotifQuestion } from '../../../components/Global/ToastNotif';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useSaldoStore } from '../../../stores/saldo-store';
 import { formatToDisplayRupiah } from '../../../components/Global/Formatter';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { fetchBalance } from '../../../stores/slices/profileSlice';
 
-const { Text } = Typography;
+const { Text, Link } = Typography;
 
 const Payment = () => {
     const navigate = useNavigate();
-    const balance = useSaldoStore((s) => s.balance);
-    const triggerRefresh = useSaldoStore((s) => s.triggerRefresh);
+
+    const dispatch = useDispatch();
+    const { balance } = useSelector((state) => state.profile);
 
     const location = useLocation();
     const data = location.state;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if(!token){
+        if(token){
+            dispatch(fetchBalance());
+        }else{
             navigate('/signin');
         }
     }, []);
@@ -31,7 +36,7 @@ const Payment = () => {
                 icon: 'warning',
                 title: 'Peringatan',
                 confirmButtonText: 'Klik disini untuk TopUp',
-                message: 'Saldo anda tidak mencukupi, silahkan Top Up terlebih dahulu.',
+                message: 'Saldo anda tidak mencukupi, silahkan Top Up terlebih dahulu untuk melanjutkan proses transaksi.',
                 onCancel: ()=>'',
                 onConfirm: () => navigate('/topup'),
             });
@@ -59,14 +64,17 @@ const Payment = () => {
                 NotifAlert({
                     icon: 'success',
                     title: 'Success',
-                    message: `Transaksi ${payload.service_code} sebesar ${formatToDisplayRupiah(data.service_tariff)} berhasil.`,
+                    message: `Transaksi ${data.service_name} sebesar ${formatToDisplayRupiah(data.service_tariff)} berhasil.`,
                 });
-                triggerRefresh();
                 navigate('/home');
             }
         } catch (error) {
             
         }
+    };
+
+    const handleBack = ()=>{
+        navigate('/home');
     };
 
     return (
@@ -112,6 +120,10 @@ const Payment = () => {
                     >
                         Bayar
                     </Button>
+                    <div style={{height: '30px'}}></div>
+                    <Link strong onClick={handleBack} style={{ color: '#ff2222' }}>
+                        Kembali ke Beranda
+                    </Link>
                 </Col>
             </Row>
         </>
