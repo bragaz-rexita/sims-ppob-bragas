@@ -68,7 +68,7 @@ const Topup = () => {
             icon: 'question',
             title: 'Konfirmasi',
             confirmButtonText: 'Ya, lanjutkan Top Up',
-            message: `Anda yakin untuk Top Up sebesar Rp${formatToDisplayRupiah(formData.top_up_amount)}`,
+            message: `Anda yakin untuk Top Up sebesar Rp${formatToDisplayRupiah(formData.top_up_amount)} ?`,
             onCancel: ()=>'',
             onConfirm: () => storeData(),
         });
@@ -85,12 +85,19 @@ const Topup = () => {
                 NotifAlert({
                     icon: 'success',
                     title: 'Success',
-                    message: `${response.message}`,
+                    message: `${response.message} sebesar ${formatToDisplayRupiah(formData.top_up_amount)}`,
                 });
+                setFormData(defaultData);
                 triggerRefresh();
+                navigate('/home');
             }
         } catch (error) {
             console.log(error);
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal memuat data ${error}`,
+            });
         }
     };
 
@@ -106,6 +113,7 @@ const Topup = () => {
                     <Text strong style={{fontSize:'30px'}}>Nominal Top Up</Text>
                 </Col>
             </Row>
+            <div style={{height: '20px'}}></div>
             <Row gutter={18}>
                 <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                     <InputIDR

@@ -3,13 +3,16 @@ import { Upload, Avatar, message } from "antd";
 import { UploadOutlined, UserOutlined, EditOutlined } from "@ant-design/icons";
 import { updatePhotoProfile } from "../../../api/api-account";
 import { NotifAlert } from "../../../components/Global/ToastNotif";
+import profilePhoto from '../../../assets/images/ppob/profile-photo.png';
 
 const ProfilePhotoUpload = ({ urlPhoto, onRefresh }) => {
     const [imageUrl, setImageUrl] = useState(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (urlPhoto) {
+        if (urlPhoto==='https://minio.nutech-integrasi.com/take-home-test/null'){
+            setImageUrl(profilePhoto);
+        }else{
             setImageUrl(urlPhoto);
         }
     }, [urlPhoto]);
@@ -49,7 +52,11 @@ const ProfilePhotoUpload = ({ urlPhoto, onRefresh }) => {
             }
         } catch (err) {
             console.error(err);
-            message.error("Gagal upload foto");
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal upload foto ${err}`,
+            });
         } finally {
             setLoading(false);
         }

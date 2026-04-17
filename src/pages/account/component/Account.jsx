@@ -36,9 +36,14 @@ const Account = () => {
         try {
             const response = await getDataAccount();
             setFormData(response.data);
-            setDisplayName(response.data.last_name);
+            setDisplayName(response.data.first_name +' '+response.data.last_name);
         } catch (error) {
             console.log(error);
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal memuat data ${error}`,
+            });
         }
     };
 
@@ -84,6 +89,11 @@ const Account = () => {
             }
         } catch (error) {
             console.log(error);
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal memuat data ${error}`,
+            });
         }
     };
 

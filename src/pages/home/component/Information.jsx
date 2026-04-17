@@ -16,7 +16,7 @@ const Information = () => {
 
     const { balance, setBalance, refreshSaldo } = useSaldoStore();
 
-    const photoProfile = profile.profile_image ?? profilePhoto;
+    const photoProfile = profile.profile_image === 'https://minio.nutech-integrasi.com/take-home-test/null' ? profilePhoto : profile.profile_image;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -34,6 +34,11 @@ const Information = () => {
             setProfile(response.data);
         } catch (error) {
             console.log(error);
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal memuat data ${error}`,
+            });
         }
     };
 
@@ -43,6 +48,11 @@ const Information = () => {
             setBalance(response.data.balance);
         } catch (error) {
             console.log(error);
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal memuat data ${error}`,
+            });
         }
     };
 
@@ -69,7 +79,7 @@ const Information = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <Text style={{fontSize:'30px', fontWeight:500}}>{profile.last_name}</Text>
+                        <Text style={{fontSize:'30px', fontWeight:500}}>{profile.first_name} {profile.last_name}</Text>
                     </Col>
                 </Row>
             </Col>

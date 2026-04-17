@@ -12,6 +12,7 @@ const { Text } = Typography;
 
 const Payment = () => {
     const navigate = useNavigate();
+    const balance = useSaldoStore((s) => s.balance);
     const triggerRefresh = useSaldoStore((s) => s.triggerRefresh);
 
     const location = useLocation();
@@ -25,14 +26,26 @@ const Payment = () => {
     }, []);
 
     const handelPayment = ()=>{
-        NotifQuestion({
-            icon: 'question',
-            title: 'Konfirmasi',
-            confirmButtonText: 'Ya, lanjutkan Bayar',
-            message: `Bayar ${data.service_name} senilai Rp${formatToDisplayRupiah(data.service_tariff)}`,
-            onCancel: ()=>'',
-            onConfirm: () => storeData(),
-        });
+        if(balance < data.service_tariff){
+            NotifQuestion({
+                icon: 'warning',
+                title: 'Peringatan',
+                confirmButtonText: 'Klik disini untuk TopUp',
+                message: 'Saldo anda tidak mencukupi, silahkan Top Up terlebih dahulu.',
+                onCancel: ()=>'',
+                onConfirm: () => navigate('/topup'),
+            });
+            return;
+        }else{
+            NotifQuestion({
+                icon: 'question',
+                title: 'Konfirmasi',
+                confirmButtonText: 'Ya, lanjutkan Bayar',
+                message: `Bayar ${data.service_name} senilai Rp${formatToDisplayRupiah(data.service_tariff)} ?`,
+                onCancel: ()=>'',
+                onConfirm: () => storeData(),
+            });
+        }
     };
 
     const storeData = async()=>{

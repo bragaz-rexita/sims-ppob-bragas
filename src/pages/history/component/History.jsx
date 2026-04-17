@@ -42,12 +42,27 @@ const History = () => {
             }
         } catch (error) {
             console.log(error);
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal memuat data ${error}`,
+            });
         }
     };
 
     const handleShowMore = async () => {
         const newOffset = offset + limit;
-        await getTransactionHistory(newOffset);
+        try {
+            await getTransactionHistory(newOffset);
+        } catch (error) {
+            console.log(error);
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal memuat data ${error}`,
+            });
+        }
+        
     };
 
     return (

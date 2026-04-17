@@ -51,6 +51,11 @@ const SignIn = () => {
             }
         } catch (error) {
             setMessage('An error occurred. Please try again.');
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal memuat data ${error}`,
+            });
         }
     };
 

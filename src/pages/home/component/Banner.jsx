@@ -38,6 +38,11 @@ const Banner = () => {
             setBanners(response.data);
         } catch (error) {
             console.log(error);
+            NotifAlert({
+                icon: 'error',
+                title: 'Error',
+                message: `Gagal memuat data ${error}`,
+            });
         }
     };
 
