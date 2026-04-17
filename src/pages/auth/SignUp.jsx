@@ -17,6 +17,7 @@ import logoSims from '../../assets/images/ppob/logo-ppob.png';
 import { register } from '../../api/auth';
 import { NotifOk, NotifAlert } from '../../components/Global/ToastNotif';
 import LayoutImages from './component/RightImage';
+import TitleWeb from './component/TitleWeb';
 
 const { Text, Link } = Typography;
 const { useBreakpoint } = Grid;
@@ -97,10 +98,7 @@ const SignUp = () => {
             vertical={isMobile}
             style={{ minHeight: '100vh' }}
         >
-            {/* IMAGE (atas di mobile) */}
             {isMobile && <LayoutImages />}
-
-            {/* FORM */}
             <Flex
                 flex={1}
                 align="center"
@@ -120,21 +118,7 @@ const SignUp = () => {
                         textAlign: 'center',
                     }}
                 >
-                    <Row>
-                        <Col span={24}>
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                gap: 8
-                            }}>
-                                <Image src={logoSims} width={30} preview={false} />
-                                <Text style={{ fontSize: 24, fontWeight: 500 }}>
-                                    SIMS PPOB
-                                </Text>
-                            </div>
-                        </Col>
-                    </Row>
+                    <TitleWeb/>
 
                     <h1 style={{ marginBottom: 20 }}>
                         Lengkapi data untuk membuat akun
@@ -225,8 +209,6 @@ const SignUp = () => {
                     </Link>
                 </Card>
             </Flex>
-
-            {/* IMAGE (kanan di desktop) */}
             {!isMobile && <LayoutImages />}
         </Flex>
     );

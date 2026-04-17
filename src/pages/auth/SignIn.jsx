@@ -7,6 +7,7 @@ import { NotifAlert, NotifProgress } from '../../components/Global/ToastNotif';
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { encryptData } from '../../components/Global/Formatter';
 import LayoutImages from './component/RightImage';
+import TitleWeb from './component/TitleWeb';
 
 const { Text, Link } = Typography;
 const { useBreakpoint } = Grid;
@@ -72,10 +73,8 @@ const SignIn = () => {
                 minHeight: '100vh',
             }}
         >
-            {/* IMAGE (atas kalau mobile) */}
             {isMobile && <LayoutImages />}
 
-            {/* FORM */}
             <Flex
                 flex={1}
                 align="center"
@@ -95,21 +94,7 @@ const SignIn = () => {
                         textAlign: 'center',
                     }}
                 >
-                    <Row>
-                        <Col span={24}>
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                gap: 8
-                            }}>
-                                <Image src={logoSims} width={30} preview={false} />
-                                <Text style={{ fontSize: 24, fontWeight: 500 }}>
-                                    SIMS PPOB
-                                </Text>
-                            </div>
-                        </Col>
-                    </Row>
+                    <TitleWeb/>
 
                     <h1 style={{ marginBottom: 20 }}>
                         Masuk atau buat akun untuk memulai
@@ -195,8 +180,6 @@ const SignIn = () => {
                     </Link>
                 </Card>
             </Flex>
-
-            {/* IMAGE (kanan kalau desktop) */}
             {!isMobile && <LayoutImages />}
         </Flex>
     );
