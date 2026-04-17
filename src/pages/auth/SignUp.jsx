@@ -1,20 +1,33 @@
 import React, { useState } from 'react';
-import { Flex, Input, Form, Button, Card, Space, Image, Typography, Row, Col, ConfigProvider } from 'antd';
+import {
+    Flex,
+    Input,
+    Form,
+    Button,
+    Card,
+    Image,
+    Typography,
+    Row,
+    Col,
+    ConfigProvider,
+    Grid
+} from 'antd';
 import { useNavigate } from 'react-router-dom';
-import logoSignup from '../../assets/images/ppob/logo-signup.png';
-import logoSims from '../../assets/images/ppob/logo-ppob.png'
+import logoSims from '../../assets/images/ppob/logo-ppob.png';
 import { register } from '../../api/auth';
 import { NotifOk, NotifAlert } from '../../components/Global/ToastNotif';
 import LayoutImages from './component/RightImage';
 
 const { Text, Link } = Typography;
+const { useBreakpoint } = Grid;
 
 const SignUp = () => {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
-    // const [isRegistered, setIsRegistered] = useState(false);
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
 
     const moveToSignin = () => {
         navigate('/signin');
@@ -33,17 +46,11 @@ const SignUp = () => {
             return;
         }
 
-        const passwordErrors = [];
-        if (password.length < 8) passwordErrors.push('Minimal 8 karakter');
-        // if (!/[A-Z]/.test(password)) passwordErrors.push('Harus ada huruf kapital');
-        // if (!/[0-9]/.test(password)) passwordErrors.push('Harus ada angka');
-        // if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
-        //     passwordErrors.push('Harus ada karakter spesial');
-        if (passwordErrors.length) {
+        if (password.length < 8) {
             NotifAlert({
                 icon: 'error',
                 title: 'Password Tidak Valid',
-                message: passwordErrors.join(', '),
+                message: 'Minimal 8 karakter',
             });
             form.resetFields(['password', 'confirmPassword']);
             return;
@@ -62,18 +69,21 @@ const SignUp = () => {
                 icon: 'success',
                 title: 'Registrasi Berhasil',
                 message: res?.data?.message || 'Berhasil menambahkan user.',
+                confirmButtonText: 'Kembali ke login',
+                onOk: ()=> navigate('/signin')
             });
 
             form.resetFields();
         } catch (err) {
-            console.error('Register error:', err);
-            const errorMessage = err?.response?.data?.message || err.message || 'Terjadi kesalahan';
+            const errorMessage =
+                err?.response?.data?.message || err.message || 'Terjadi kesalahan';
 
             NotifAlert({
                 icon: 'error',
                 title: 'Registrasi Gagal',
-                message: errorMessage || 'Terjadi kesalahan',
+                message: errorMessage,
             });
+
             if (errorMessage.toLowerCase().includes('already')) {
                 form.resetFields();
             }
@@ -84,15 +94,21 @@ const SignUp = () => {
 
     return (
         <Flex
-            style={{
-                minHeight: '100vh',
-            }}
+            vertical={isMobile}
+            style={{ minHeight: '100vh' }}
         >
+            {/* IMAGE (atas di mobile) */}
+            {isMobile && <LayoutImages />}
+
+            {/* FORM */}
             <Flex
                 flex={1}
                 align="center"
                 justify="center"
-                style={{ backgroundColor: 'white' }}
+                style={{
+                    backgroundColor: 'white',
+                    padding: isMobile ? '20px' : 0
+                }}
             >
                 <Card
                     style={{
@@ -106,7 +122,12 @@ const SignUp = () => {
                 >
                     <Row>
                         <Col span={24}>
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8 }}>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: 8
+                            }}>
                                 <Image src={logoSims} width={30} preview={false} />
                                 <Text style={{ fontSize: 24, fontWeight: 500 }}>
                                     SIMS PPOB
@@ -125,15 +146,23 @@ const SignUp = () => {
                             name="email"
                             rules={[{ required: true, type: 'email' }]}
                         >
-                            <Input size="large" placeholder='Masukkan email anda' />
+                            <Input size="large" placeholder="Masukkan email anda" />
                         </Form.Item>
 
-                        <Form.Item label="Nama Depan" name="first_name" rules={[{ required: true }]}>
-                            <Input size="large" placeholder='Nama Depan'/>
+                        <Form.Item
+                            label="Nama Depan"
+                            name="first_name"
+                            rules={[{ required: true }]}
+                        >
+                            <Input size="large" placeholder="Nama Depan" />
                         </Form.Item>
 
-                        <Form.Item label="Nama Belakang" name="last_name" rules={[{ required: true }]}>
-                            <Input size="large" placeholder='Nama Belakang'/>
+                        <Form.Item
+                            label="Nama Belakang"
+                            name="last_name"
+                            rules={[{ required: true }]}
+                        >
+                            <Input size="large" placeholder="Nama Belakang" />
                         </Form.Item>
 
                         <Form.Item
@@ -141,7 +170,7 @@ const SignUp = () => {
                             name="password"
                             rules={[{ required: true }]}
                         >
-                            <Input.Password size="large" placeholder='Password'/>
+                            <Input.Password size="large" placeholder="Password" />
                         </Form.Item>
 
                         <Form.Item
@@ -160,8 +189,9 @@ const SignUp = () => {
                                 }),
                             ]}
                         >
-                            <Input.Password size="large" placeholder='Konfirmasi Password'/>
+                            <Input.Password size="large" placeholder="Konfirmasi Password" />
                         </Form.Item>
+
                         <ConfigProvider
                             theme={{
                                 token: { colorBgContainer: '#ff3a3a' },
@@ -177,19 +207,27 @@ const SignUp = () => {
                                 },
                             }}
                         >
-                            <Button style={{width:'100%'}} loading={loading} htmlType="submit">
+                            <Button
+                                style={{ width: '100%' }}
+                                loading={loading}
+                                htmlType="submit"
+                            >
                                 Registrasi
                             </Button>
                         </ConfigProvider>
                     </Form>
-                    <div style={{height: '20px'}}></div>
-                    <Text>Sudah punya akun ? login </Text>
+
+                    <div style={{ height: '20px' }} />
+
+                    <Text>Sudah punya akun? login </Text>
                     <Link onClick={moveToSignin} style={{ color: '#ff2222' }}>
                         disini
                     </Link>
                 </Card>
             </Flex>
-            <LayoutImages/>
+
+            {/* IMAGE (kanan di desktop) */}
+            {!isMobile && <LayoutImages />}
         </Flex>
     );
 };

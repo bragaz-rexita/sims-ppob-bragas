@@ -12,12 +12,16 @@ const NotifAlert = ({ icon, title, message }) => {
     });
 };
 
-const NotifOk = ({ icon, title, message }) => {
+const NotifOk = ({ icon, title, message, confirmButtonText, onOk}) => {
     Swal.fire({
         icon: icon,
         title: title,
         text: message,
+        confirmButtonText,
+        confirmButtonColor: '#23A55A',
         allowOutsideClick: false
+    }).then((result)=>{
+        onOk();
     });
 };
 
