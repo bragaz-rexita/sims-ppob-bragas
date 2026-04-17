@@ -65,9 +65,19 @@ const History = () => {
         
     };
 
+    const handleBack = ()=>{
+        navigate('/home');
+    };
+
     return (
         <>
             <Row style={{marginTop:50}}>
+                <Col>
+                    <Link strong onClick={handleBack} style={{ color: '#ff2222' }}>
+                        Kembali ke Beranda
+                    </Link>
+                    <div style={{height: '30px'}}></div>
+                </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Text style={{fontSize:'18px'}}>Semua Transaksi</Text>
                 </Col>

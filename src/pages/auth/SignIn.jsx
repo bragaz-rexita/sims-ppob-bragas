@@ -19,6 +19,10 @@ const SignIn = () => {
     const isMobile = !screens.md;
 
     const handleOnSubmit = async (values) => {
+        NotifProgress({
+            title: 'Waiting...',
+            timer: 2000
+        });
         try {
             const payload = {
                 email: values.email,
@@ -27,11 +31,6 @@ const SignIn = () => {
 
             const response = await login(payload);
             if (response) {
-                NotifProgress({
-                    title: 'Waiting...',
-                    timer: 2000
-                });
-
                 const token = response.data.data.token;
                 localStorage.setItem('token', token);
 

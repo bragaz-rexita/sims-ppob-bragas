@@ -5,14 +5,15 @@ import { Height } from '../../../components/Global/Height';
 import { createTopUp } from '../../../api/api-topup';
 import { toApiRemoveIDR, formatToDisplayRupiah } from '../../../components/Global/Formatter';
 import { NotifAlert, NotifQuestion } from '../../../components/Global/ToastNotif';
-import { useSaldoStore } from '../../../stores/saldo-store';
+import { useDispatch } from 'react-redux';
+import { fetchBalance } from '../../../stores/slices/profileSlice';
 import { useNavigate } from 'react-router-dom';
 
-const { Text } = Typography;
+const { Text, Link } = Typography;
 
 const Topup = () => {
     const navigate = useNavigate();
-    const triggerRefresh = useSaldoStore((s) => s.triggerRefresh);
+    const dispatch = useDispatch();
 
     const defaultData = {
         top_up_amount: 0
@@ -88,7 +89,7 @@ const Topup = () => {
                     message: `${response.message} sebesar ${formatToDisplayRupiah(formData.top_up_amount)}`,
                 });
                 setFormData(defaultData);
-                triggerRefresh();
+                dispatch(fetchBalance());
                 navigate('/home');
             }
         } catch (error) {
@@ -99,6 +100,10 @@ const Topup = () => {
                 message: `Gagal memuat data ${error}`,
             });
         }
+    };
+
+    const handleBack = ()=>{
+        navigate('/home');
     };
 
     return (
@@ -138,6 +143,10 @@ const Topup = () => {
                     >
                         Top Up
                     </Button>
+                    <div style={{height: '30px'}}></div>
+                    <Link strong onClick={handleBack} style={{ color: '#ff2222' }}>
+                        Kembali ke Beranda
+                    </Link>
                 </Col>
                 <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                     <Row gutter={10}>

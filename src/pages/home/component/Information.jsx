@@ -1,64 +1,48 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Typography, Image } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import bgSaldo from '../../../assets/images/ppob/bg-saldo.png';
 import profilePhoto from '../../../assets/images/ppob/profile-photo.png';
-import { getDataProfile, getDataBalance } from '../../../api/api-home';
+import { fetchProfile, fetchBalance } from '../../../stores/slices/profileSlice';
 import { formatToDisplayRupiah } from '../../../components/Global/Formatter';
-import { useSaldoStore } from '../../../stores/saldo-store';
-import { useNavigate } from 'react-router-dom';
+import { NotifAlert } from '../../../components/Global/ToastNotif';
 
 const { Text, Link } = Typography;
 
 const Information = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [profile, setProfile] = useState({});
+
     const [showSaldo, setShowSaldo] = useState(false);
 
-    const { balance, setBalance, refreshSaldo } = useSaldoStore();
+    const { profile, balance, error } = useSelector((state) => state.profile);
 
     const photoProfile = profile.profile_image === 'https://minio.nutech-integrasi.com/take-home-test/null' ? profilePhoto : profile.profile_image;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if(token){
-            getProfile();
-            getBalance();
-        }else{
+        if (token) {
+            dispatch(fetchProfile());
+            dispatch(fetchBalance());
+        } else {
             navigate('/signin');
         }
-    }, [refreshSaldo]);
+    }, [dispatch]);
 
-    const getProfile = async()=>{
-        try {
-            const response = await getDataProfile();
-            setProfile(response.data);
-        } catch (error) {
-            console.log(error);
+    useEffect(() => {
+        if (error) {
             NotifAlert({
                 icon: 'error',
                 title: 'Error',
                 message: `Gagal memuat data ${error}`,
             });
         }
-    };
-
-    const getBalance = async()=>{
-        try {
-            const response = await getDataBalance();
-            setBalance(response.data.balance);
-        } catch (error) {
-            console.log(error);
-            NotifAlert({
-                icon: 'error',
-                title: 'Error',
-                message: `Gagal memuat data ${error}`,
-            });
-        }
-    };
+    }, [error]);
 
     return (
-        <Row style={{marginTop:50}} justify={'space-between'}>
-            <Col xs={8} sm={8} md={8} lg={8} xl={8}>
+        <Row style={{ marginTop: 50 }} justify={'space-between'}>
+            <Col xs={24} md={8}>
                 <Row>
                     <Col>
                         <Image
@@ -72,38 +56,50 @@ const Information = () => {
                         />
                     </Col>
                 </Row>
+
                 <Row>
                     <Col>
-                        <Text style={{fontSize:18}}>Selamat datang,</Text>
+                        <Text style={{ fontSize: 18 }}>Selamat datang,</Text>
                     </Col>
                 </Row>
+
                 <Row>
                     <Col>
-                        <Text style={{fontSize:'30px', fontWeight:500}}>{profile.first_name} {profile.last_name}</Text>
+                        <Text style={{ fontSize: '30px', fontWeight: 500 }}>
+                            {profile.first_name} {profile.last_name}
+                        </Text>
                     </Col>
                 </Row>
             </Col>
-            <Col xs={10} sm={10} md={10} lg={10} xl={10}>
+            <Col xs={24} md={10} style={{ marginTop: 20 }}>
                 <div
                     style={{
                         backgroundImage: `url(${bgSaldo})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
-                        borderRadius:10
+                        borderRadius: 10,
                     }}
                 >
-                    <Row style={{padding:'20px 0px 0px 20px'}}>
+                    <Row style={{ padding: '20px 0px 0px 20px' }}>
                         <Col>
-                            <Text strong style={{fontSize:18, color:'white'}}>Saldo anda</Text>
+                            <Text strong style={{ fontSize: 18, color: 'white' }}>
+                                Saldo anda
+                            </Text>
                         </Col>
                     </Row>
-                    <Row style={{padding:'0px 0px 0px 20px'}}>
+
+                    <Row style={{ padding: '0px 0px 0px 20px' }}>
                         <Col>
-                            <Text strong style={{fontSize:30, color:'white'}}>Rp {showSaldo ? formatToDisplayRupiah(balance) : '•••••••••••'}</Text>
+                            <Text strong style={{ fontSize: 30, color: 'white' }}>
+                                Rp {showSaldo
+                                    ? formatToDisplayRupiah(balance)
+                                    : '•••••••••••'}
+                            </Text>
                         </Col>
                     </Row>
-                    <Row style={{padding:'0px 20px 15px 20px'}}>
+
+                    <Row style={{ padding: '0px 20px 15px 20px' }}>
                         <Col>
                             <Link
                                 style={{ fontSize: 16, color: 'white' }}
