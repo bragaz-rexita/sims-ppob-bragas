@@ -1,8 +1,7 @@
-import { Flex, Input, Form, Button, Card, Space, Image, Typography, Row, Col, ConfigProvider } from 'antd';
+import { Flex, Input, Form, Button, Card, Space, Image, Typography, Row, Col, ConfigProvider, Grid } from 'antd';
 import React from 'react';
 import { login } from '../../api/auth';
-import logoSignup from '../../assets/images/ppob/logo-signup.png';
-import logoSims from '../../assets/images/ppob/logo-ppob.png'
+import logoSims from '../../assets/images/ppob/logo-ppob.png';
 import { useNavigate } from 'react-router-dom';
 import { NotifAlert, NotifProgress } from '../../components/Global/ToastNotif';
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
@@ -10,17 +9,21 @@ import { encryptData } from '../../components/Global/Formatter';
 import LayoutImages from './component/RightImage';
 
 const { Text, Link } = Typography;
+const { useBreakpoint } = Grid;
 
 const SignIn = () => {
     const [message, setMessage] = React.useState('');
     const navigate = useNavigate();
+
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
 
     const handleOnSubmit = async (values) => {
         try {
             const payload = {
                 email: values.email,
                 password: values.password,
-            }
+            };
 
             const response = await login(payload);
             if (response) {
@@ -59,21 +62,29 @@ const SignIn = () => {
         }
     };
 
-    const moveToRegistration = (e) => {
-        navigate("/signup")
+    const moveToRegistration = () => {
+        navigate("/signup");
     };
 
     return (
         <Flex
+            vertical={isMobile}
             style={{
                 minHeight: '100vh',
             }}
         >
+            {/* IMAGE (atas kalau mobile) */}
+            {isMobile && <LayoutImages />}
+
+            {/* FORM */}
             <Flex
                 flex={1}
                 align="center"
                 justify="center"
-                style={{ backgroundColor: 'white' }}
+                style={{
+                    backgroundColor: 'white',
+                    padding: isMobile ? '20px' : 0
+                }}
             >
                 <Card
                     style={{
@@ -87,7 +98,12 @@ const SignIn = () => {
                 >
                     <Row>
                         <Col span={24}>
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8 }}>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: 8
+                            }}>
                                 <Image src={logoSims} width={30} preview={false} />
                                 <Text style={{ fontSize: 24, fontWeight: 500 }}>
                                     SIMS PPOB
@@ -109,37 +125,44 @@ const SignIn = () => {
                         }}
                     >
                         <Form.Item
-                            label={<Text style={{fontSize: '17px'}}>Email</Text>}
+                            label={<Text style={{ fontSize: '17px' }}>Email</Text>}
                             name="email"
                             rules={[
                                 {
                                     required: true,
-                                    message: <Text style={{fontSize: '14px', color: 'red'}}>Please input your Email!</Text>
+                                    message: <Text style={{ fontSize: '14px', color: 'red' }}>
+                                        Please input your Email!
+                                    </Text>
                                 },
                             ]}
                         >
                             <Input
-                                prefix={<MailOutlined className="site-form-item-icon" />}
-                                placeholder="Email" size="large"
+                                prefix={<MailOutlined />}
+                                placeholder="Email"
+                                size="large"
                                 autoFocus
                             />
                         </Form.Item>
+
                         <Form.Item
-                            label={<Text style={{fontSize: '17px'}}>Password</Text>}
+                            label={<Text style={{ fontSize: '17px' }}>Password</Text>}
                             name="password"
                             rules={[
                                 {
                                     required: true,
-                                    message: <Text style={{fontSize: '14px', color: 'red'}}>Please input your Password!</Text>
+                                    message: <Text style={{ fontSize: '14px', color: 'red' }}>
+                                        Please input your Password!
+                                    </Text>
                                 },
                             ]}
                         >
                             <Input.Password
-                                prefix={<LockOutlined className="site-form-item-icon" />}
+                                prefix={<LockOutlined />}
                                 placeholder="Password"
                                 size="large"
                             />
                         </Form.Item>
+
                         <Form.Item>
                             <Space direction="vertical" style={{ width: '100%' }}>
                                 <ConfigProvider
@@ -157,21 +180,25 @@ const SignIn = () => {
                                         },
                                     }}
                                 >
-                                    <Button style={{width:'100%'}} htmlType="submit">
+                                    <Button style={{ width: '100%' }} htmlType="submit">
                                         Masuk
                                     </Button>
                                 </ConfigProvider>
                             </Space>
                         </Form.Item>
                     </Form>
-                    <div style={{height: '20px'}}></div>
-                    <Text>Belum punya akun ? registrasi </Text>
+
+                    <div style={{ height: '20px' }} />
+
+                    <Text>Belum punya akun? registrasi </Text>
                     <Link onClick={moveToRegistration} style={{ color: '#ff2222' }}>
                         disini
                     </Link>
                 </Card>
             </Flex>
-            <LayoutImages/>
+
+            {/* IMAGE (kanan kalau desktop) */}
+            {!isMobile && <LayoutImages />}
         </Flex>
     );
 };
