@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { NotifAlert, NotifProgress } from '../../components/Global/ToastNotif';
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { encryptData } from '../../components/Global/Formatter';
+import LayoutImages from './component/RightImage';
 
 const { Text, Link } = Typography;
 
@@ -27,18 +28,17 @@ const SignIn = () => {
                     title: 'Waiting...',
                     timer: 2000
                 });
-                // NotifAlert({
-                //     icon: 'success',
-                //     title: 'Success',
-                //     message: 'Login success, redirect to home',
-                // });
+
                 const token = response.data.data.token;
                 localStorage.setItem('token', token);
+
                 const dataSession = {
                     ...response.data.data,
                     auth: true,
                 };
+
                 localStorage.setItem('session', encryptData(dataSession));
+
                 setTimeout(() => {
                     navigate('/home');
                 }, 3000);
@@ -142,9 +142,6 @@ const SignIn = () => {
                         </Form.Item>
                         <Form.Item>
                             <Space direction="vertical" style={{ width: '100%' }}>
-                                {/* <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
-                                    Sign In
-                                </Button> */}
                                 <ConfigProvider
                                     theme={{
                                         token: { colorBgContainer: '#ff3a3a' },
@@ -174,21 +171,7 @@ const SignIn = () => {
                     </Link>
                 </Card>
             </Flex>
-            <Flex
-                flex={1}
-                align="center"
-                justify="center"
-                style={{ backgroundColor: '#f5f5f5' }}
-            >
-                <Image
-                    src={logoSignup}
-                    preview={false}
-                    style={{
-                        maxWidth: '89%',
-                        height: 'auto',
-                    }}
-                />
-            </Flex>
+            <LayoutImages/>
         </Flex>
     );
 };

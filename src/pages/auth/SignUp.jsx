@@ -5,6 +5,7 @@ import logoSignup from '../../assets/images/ppob/logo-signup.png';
 import logoSims from '../../assets/images/ppob/logo-ppob.png'
 import { register } from '../../api/auth';
 import { NotifOk, NotifAlert } from '../../components/Global/ToastNotif';
+import LayoutImages from './component/RightImage';
 
 const { Text, Link } = Typography;
 
@@ -22,7 +23,6 @@ const SignUp = () => {
     const handleSignUp = async (values) => {
         const { email, first_name, last_name, password, confirmPassword } = values;
 
-        // Validasi confirm password
         if (password !== confirmPassword) {
             NotifAlert({
                 icon: 'error',
@@ -33,7 +33,6 @@ const SignUp = () => {
             return;
         }
 
-        // Validasi password kompleks
         const passwordErrors = [];
         if (password.length < 8) passwordErrors.push('Minimal 8 karakter');
         // if (!/[A-Z]/.test(password)) passwordErrors.push('Harus ada huruf kapital');
@@ -190,21 +189,7 @@ const SignUp = () => {
                     </Link>
                 </Card>
             </Flex>
-            <Flex
-                flex={1}
-                align="center"
-                justify="center"
-                style={{ backgroundColor: '#f5f5f5' }}
-            >
-                <Image
-                    src={logoSignup}
-                    preview={false}
-                    style={{
-                        maxWidth: '89%',
-                        height: 'auto',
-                    }}
-                />
-            </Flex>
+            <LayoutImages/>
         </Flex>
     );
 };
